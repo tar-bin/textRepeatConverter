@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <title>繰り返し文字列を作るサンプル</title>
+  </head>
+  <body>
+    <div id="app">
+        <div class="mb-3">
+            <label for="inputText1" class="form-label">入力 : {{ size1 }}文字</label>
+            <textarea class="form-control" id="inputText1" rows="3" v-model="inputText1"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="inputText2" class="form-label">繰り返し文字列 : {{ size2 }}文字</label>
+            <input class="form-control" id="inputText2" rows="3" v-model="inputText2"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="outputTextarea" class="form-label">出力</label>
+            <textarea class="form-control" id="outputTextarea" rows="3" v-model="outputText"></textarea>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+      
+        createApp({
+          data() {
+            return {
+              inputText1: '',
+              inputText2: '',
+              outputText: '',
+              size1: 0,
+              size2: 0
+            }
+          },
+          watch: {
+            inputText1(newText, oldText) {
+                this.size1 = newText.length;
+                this.updateText(newText, this.inputText2);
+            },
+            inputText2(newText, oldText) {
+                this.size2 = newText.length;
+                this.updateText(this.inputText1, newText);
+            }
+          },
+          methods: {
+            updateText(inputText1, inputText2) {
+                if (inputText1 === null || inputText1 === "") {
+                    return;
+                }
+                if (inputText2 === null || inputText2 === "") {
+                    return;
+                }
+
+                let size1 = inputText1.length;
+                let size2 = inputText2.length;
+
+                let count1 = parseInt(size1 / size2);
+                let count2 = parseInt(size1 % size2);
+
+                let result = "";
+                for (let i = 0; i < count1; i++) {
+                    result += inputText2;
+                }
+                result += inputText2.substr(0, count2);
+
+                this.outputText = result;
+            }
+          }
+        }).mount('#app')
+    </script>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
